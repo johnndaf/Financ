@@ -211,10 +211,10 @@
                             </div>
                             
                             <!-- Datapicker -->
-                            <div class="form-group input-group date">
+                            <div class="form-group">
                               <label class="col-md-4 control-label" for="data">Data</label>  
                               <div class="col-md-8">
-                              <input type="text" class="form-control">
+                                  <input type="text" name="data" id="data" class="form-control">
 
                               </div>
                             </div>
