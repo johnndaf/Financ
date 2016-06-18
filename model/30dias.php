@@ -1,21 +1,17 @@
 <?php
 
-$dados[0] = array('data' => '10/06/16',
-    'descricao' => 'McDonalds',
-    'categoria' => 'Refeição',
-    'tipo' => 'D',
-    'valor' => 24.89);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-$dados[1] = array('data' => '10/06/16',
-    'descricao' => 'Estacionamento',
-    'categoria' => 'Veiculo',
-    'tipo' => 'D',
-    'valor' => 8.00);
+$dbcon = new PDO("sqlite:banco.sqlite");
 
-$dados[2] = array('data' => '08/06/16',
-    'descricao' => 'Salario',
-    'categoria' => 'Rendimento',
-    'tipo' => 'C',
-    'valor' => 800.00);
+$hoje = new DateTime();
+$mesAnterior = new DateTime('-1 month');
 
-echo json_encode($dados);
+$sql = "SELECT * FROM conta_corrente "
+        . "WHERE data between '".$mesAnterior->format('Y-m-d')."' AND '".$hoje->format('Y-m-d')."' "
+        . "ORDER BY data ASC";
+
+$result = $dbcon->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+echo json_encode($result);

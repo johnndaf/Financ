@@ -25,11 +25,22 @@
     </style>
     <!-- Custom styles for this template -->
     <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/bootstrap-datepicker3.css" rel="stylesheet">
     
-    <script src='js/jquery-3.0.0.min.js'></script>
+    <script src='js/jquery-2.2.4.js'></script>
+    <script src='js/bootstrap.min.js'></script>
+    
+    <script src='js/bootstrap-datepicker.min.js'></script>
+    <script src='locales/bootstrap-datepicker.pt-BR.min.js'></script>
     
     <script type='text/javascript'>
         $(document).ready(function() {
+            
+            $('#data').datepicker({
+                format: "dd/mm/yyyy",
+                language: "pt-BR"
+            });
+            
             $.getJSON('model/30dias.php',function(dados){
                console.log(dados);
                var total = 0;
@@ -37,10 +48,13 @@
                $(dados).each(function(ind, elem){
                    var classValor = (elem.tipo == "C")? 'valor-credito':'valor-debito';
                    
-                   total = (elem.tipo == "C")? total + elem.valor : total - elem.valor;
+                   total = (elem.tipo == "C")? total + parseFloat(elem.valor) : total - parseFloat(elem.valor);
+                   
+                   var data = new Date(elem.data);
+                   
                    
                    var tr = $('<tr>' +
-                  '<td>'+elem.data+'</td>'+
+                  '<td>'+data.getDate()+'/'+(data.getMonth()+1)+'/'+data.getFullYear()+'</td>'+
                   '<td>'+elem.descricao+'</td>'+
                   '<td>'+elem.categoria+'</td>'+
                   '<td>'+elem.tipo+'</td>'+
@@ -83,8 +97,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 main">
-          <h1 class="page-header">Painel</h1>
-
+          <h1 class="page-header">Painel
+              <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#add-registro">Registro</button>
+          </h1>
+            
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
               <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
@@ -133,6 +149,85 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="add-registro">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Adicionar Novo Registro</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                            <fieldset>
+                            <!-- Text input-->
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="descricao">Descrição</label>  
+                              <div class="col-md-8">
+                              <input id="descricao" name="descricao" type="text" placeholder="" class="form-control input-md">
+
+                              </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="categoria">Categoria</label>  
+                              <div class="col-md-8">
+                              <input id="categoria" name="categoria" type="text" placeholder="" class="form-control input-md">
+
+                              </div>
+                            </div>
+
+                            <!-- Prepended text-->
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="valor">Valor</label>
+                              <div class="col-md-8">
+                                <div class="input-group">
+                                  <span class="input-group-addon">R$</span>
+                                  <input id="valor" name="valor" class="form-control" placeholder="" type="text">
+                                </div>
+
+                              </div>
+                            </div>
+
+                            <!-- Multiple Radios -->
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="tipo">Tipo de Registro</label>
+                              <div class="col-md-4">
+                              <div class="radio">
+                                <label for="tipo-0">
+                                  <input type="radio" name="tipo" id="tipo-0" value="C" checked="checked">
+                                  Crédito
+                                </label>
+                                    </div>
+                              <div class="radio">
+                                <label for="tipo-1">
+                                  <input type="radio" name="tipo" id="tipo-1" value="D">
+                                  Débito
+                                </label>
+                                    </div>
+                              </div>
+                            </div>
+                            
+                            <!-- Datapicker -->
+                            <div class="form-group input-group date">
+                              <label class="col-md-4 control-label" for="data">Data</label>  
+                              <div class="col-md-8">
+                              <input type="text" class="form-control">
+
+                              </div>
+                            </div>
+                            
+                            </fieldset>                            
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
     </div>
   </body>
 </html>
