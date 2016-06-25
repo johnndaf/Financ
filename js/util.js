@@ -16,4 +16,20 @@ function formataDinheiro (valor){
     return valor_formatado;
 }
 
+function insereRegistro(elem){
+    var classValor = (elem.tipo == "C")? 'valor-credito':'valor-debito';
+                   
+    var data = new Date(elem.data);
+                   
+        var tr = $('<tr>' +
+            '<td>'+data.getDate()+'/'+(data.getMonth()+1)+'/'+data.getFullYear()+'</td>'+
+            '<td>'+elem.descricao+'</td>'+
+            '<td>'+elem.categoria+'</td>'+
+            '<td>'+elem.tipo+'</td>'+
+            '<td class="'+classValor+'">R$ '+formataDinheiro(elem.valor)+'</td>'+
+             '</tr>');
+        
+        $('#rel-30dias tbody').append(tr);
+}
+
 

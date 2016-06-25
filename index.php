@@ -46,28 +46,14 @@
             
             $('#data').datepicker({
                 format: "dd/mm/yyyy",
-                language: "pt-BR"
+                language: "pt-BR",
+                endDate: now,
             });
             
             $.getJSON('model/30dias.php',function(dados){
-               console.log(dados);
-            
                
                $(dados).each(function(ind, elem){
-                   var classValor = (elem.tipo == "C")? 'valor-credito':'valor-debito';
-                   
-                   var data = new Date(elem.data);
-                   
-                   
-                   var tr = $('<tr>' +
-                  '<td>'+data.getDate()+'/'+(data.getMonth()+1)+'/'+data.getFullYear()+'</td>'+
-                  '<td>'+elem.descricao+'</td>'+
-                  '<td>'+elem.categoria+'</td>'+
-                  '<td>'+elem.tipo+'</td>'+
-                  '<td class="'+classValor+'">R$ '+formataDinheiro(elem.valor)+'</td>'+
-                '</tr>');
-        
-                $('#rel-30dias tbody').append(tr);
+                   insereRegistro(elem);
                });
                
             });
@@ -77,8 +63,7 @@
             });
             
             $('#cadastro-novo').submit(function(evento){
-                evento.preventDefault()
-;                
+                evento.preventDefault();                
                 var novoRegistro = {
                 descricao: $('#descricao').val(),
                 data: $('#data').val(),
@@ -89,17 +74,7 @@
             $.post('model/novo.php', novoRegistro);
             $('#add-registro').modal('hide');
             
-            var classValor = (novoRegistro.tipo == "C")? 'valor-credito':'valor-debito';
-            
-            var tr = $('<tr>' +
-                  '<td>'+novoRegistro.data+'</td>'+
-                  '<td>'+novoRegistro.descricao+'</td>'+
-                  '<td>'+novoRegistro.categoria+'</td>'+
-                  '<td>'+novoRegistro.tipo+'</td>'+
-                  '<td class="'+classValor+'">R$ '+formataDinheiro(novoRegistro.valor)+'</td>'+
-                '</tr>');
-        
-                $('#rel-30dias tbody').append(tr);
+            insereRegistro(novoRegistro);
                 
                 $.getJSON('model/saldo.php',function(dados){
                    console.log(dados);
