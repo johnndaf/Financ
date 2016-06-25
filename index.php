@@ -22,6 +22,13 @@
         .valor-credito{
             color: blue;
         }
+        .saldo  {
+            font-size:  16pt;
+            border-top: solid 2px black;
+        }
+        #valor-total {
+            font-style: initial;
+        }
     </style>
     <!-- Custom styles for this template -->
     <link href="css/dashboard.css" rel="stylesheet">
@@ -32,6 +39,7 @@
     
     <script src='js/bootstrap-datepicker.min.js'></script>
     <script src='locales/bootstrap-datepicker.pt-BR.min.js'></script>
+    <script src='js/util.js'></script>
     
     <script type='text/javascript'>
         $(document).ready(function() {
@@ -43,12 +51,10 @@
             
             $.getJSON('model/30dias.php',function(dados){
                console.log(dados);
-               var total = 0;
+            
                
                $(dados).each(function(ind, elem){
                    var classValor = (elem.tipo == "C")? 'valor-credito':'valor-debito';
-                   
-                   total = (elem.tipo == "C")? total + parseFloat(elem.valor) : total - parseFloat(elem.valor);
                    
                    var data = new Date(elem.data);
                    
@@ -58,11 +64,14 @@
                   '<td>'+elem.descricao+'</td>'+
                   '<td>'+elem.categoria+'</td>'+
                   '<td>'+elem.tipo+'</td>'+
-                  '<td class="'+classValor+'">R$ '+elem.valor+'</td>'+
+                  '<td class="'+classValor+'">R$ '+formataDinheiro(elem.valor)+'</td>'+
                 '</tr>');
         
                 $('#rel-30dias tbody').append(tr);
-                $('#valor-total').html(total);
+               });
+               $.getJSON('model/saldo.php',function(dados){
+                   console.log(dados);
+                   $('#valor-total').html('R$ ' + formataDinheiro(dados.saldo));
                });
             });
         });
@@ -139,7 +148,7 @@
               <tbody>
                 
               </tbody>
-              <tfoot>
+              <tfoot class="saldo">
                   <tr>
                       <td colspan="4">Saldo Total:</td>
                       <td id="valor-total"></td>
